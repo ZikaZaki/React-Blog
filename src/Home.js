@@ -1,25 +1,17 @@
-import { useState, useEffect } from 'react';
+import useFetch from './useFetch';
 import BlogList from './BlogList';
 
+/* JSON Server: is a package which allow us 
+to build a fake REST-API by just using JSON files 
+*/
 const Home = () => {
-    const [blogs, setBlogs] = useState([
-        { title: 'My new website', body: 'lorem ipsum...', author: 'ZikaZaki', id: 1 },
-        { title: 'Welcome party!', body: 'lorem ipsum...', author: 'yoshi', id: 2 },
-        { title: 'Web dev top tips', body: 'lorem ipsum...', author: 'ZikaZaki', id: 3 }
-    ]);
-
-    const handleDelete = (id) => {
-        setBlogs(blogs.filter((blog) => blog.id !== id));
-    }
-
-    useEffect(()=>{
-        console.log('use effect ran'); 
-        console.log(blogs);
-    });
+    const { data: blogs, isPending, error } = useFetch('http://localhost:8000/blogs');
  
     return (
         <div className="home">
-         <BlogList blogs={blogs} title="All Blogs" handleDelete={handleDelete} />
+         { error && <div>{ error }</div> }
+         { isPending && <div>Loading...</div> }
+         {blogs && <BlogList blogs={blogs} title="All Blogs" />}
          {/* <BlogList blogs={blogs.filter((blog)=> blog.author==='ZikaZaki')} title="ZikaZaki's Blogs" /> */}
         </div>
     );
